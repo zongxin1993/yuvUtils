@@ -13,7 +13,7 @@ void streamUtils_opt::printusage() {
     cout << "    -width  <int>       Input stream width." << endl;
     cout << "    -height <int>       Input stream height." << endl;
     cout << "    -mode   <str>       Function mode [ play | split | bright | gray ]." << endl;
-    cout << "    -b      <int>       Output file bright." << endl;
+    cout << "    -bright <float>     Output file bright." << endl;
 }
 
 Exception streamUtils_opt::parse_options(int argc, char *argv[], OptionParseCtx *pCtx) {
