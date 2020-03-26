@@ -31,6 +31,7 @@ typedef struct OptionParse {
     const char *format;
     int width;
     int height;
+    int fps;
     double bright;
 } OptionParse;
 
@@ -42,6 +43,7 @@ typedef struct YuvUtilsCtx {
     int size;
     int width;
     int height;
+    int fps;
     double bright;
 } YuvUtilsCtx;
 

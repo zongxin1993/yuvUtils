@@ -8,8 +8,8 @@ ERR yuvTools::yuvTools_yuv_split(YuvUtilsCtx yuvUtilsCtx) {
     float frame_size = 0;
     int uv = 0;
     if (FORMAT_I420 == yuvUtilsCtx.format) {
-        frame_size = I420_FRAME_SIZE;
-        uv = I420_UV_FRAME_SCALE;
+        frame_size = YUV420_FRAME_SIZE;
+        uv = YUV420_UV_FRAME_SCALE;
     } else {
         return ERR_INVALID_PARAMS;
     }
@@ -49,8 +49,8 @@ ERR yuvTools::yuvTools_yuv_gray(YuvUtilsCtx yuvUtilsCtx) {
     float frame_size = 0;
     float uv = 0;
     if (FORMAT_I420 == yuvUtilsCtx.format) {
-        frame_size = I420_FRAME_SIZE;
-        uv = I420_UV_FRAME_SIZE_SCALE;
+        frame_size = YUV420_FRAME_SIZE;
+        uv = YUV420_UV_FRAME_SIZE_SCALE;
     } else {
         return ERR_INVALID_PARAMS;
     }
@@ -78,7 +78,7 @@ ERR yuvTools::yuvTools_yuv_bright(YuvUtilsCtx yuvUtilsCtx) {
     unsigned int size = yuvUtilsCtx.size;
     float frame_size = 0;
     if (FORMAT_I420 == yuvUtilsCtx.format) {
-        frame_size = I420_FRAME_SIZE;
+        frame_size = YUV420_FRAME_SIZE;
     } else {
         return ERR_INVALID_PARAMS;
     }

@@ -9,7 +9,7 @@ void streamUtils_opt::print_usage(char *string) {
     cout << "    -help               help." << endl;
     cout << "    -i      <str>       Input file stream." << endl;
     cout << "    -o      <str>       Output file stream." << endl;
-    cout << "    -format <str>       Input format [ nv12 | yuv420p ]." << endl;
+    cout << "    -format <str>       Input format [ nv12 | I420 ]." << endl;
     cout << "    -w      <int>       Input stream width." << endl;
     cout << "    -h      <int>       Input stream height." << endl;
     cout << "    -m      <str>       Function mode [ player | split | bright | gray ]." << endl;
@@ -38,6 +38,8 @@ int streamUtils_opt::parse_options(int argc, char *argv[], OptionParse *optionPa
             READ_PAR_INT(optionParse->height, "%i")
         } else if (!strcmp(argv[i], "-format")) {
             READ_PAR_STRING(optionParse->format)
+        } else if (!strcmp(argv[i], "-f")) {
+            READ_PAR_INT(optionParse->fps, "%i")
         } else {
             cout << "Parameter Error : " << argv[i] << endl;
             return ERR_INVALID_PARAMS;
@@ -80,14 +82,19 @@ int streamUtils_opt::check_parse(OptionParse *optionParse, YuvUtilsCtx *yuvUtils
     yuvUtilsCtx->bright = optionParse->bright;
     if (!strcmp(optionParse->format, "I420")) {
         yuvUtilsCtx->format = FORMAT_I420;
-    } else if (!strcmp(optionParse->format, "nv12")) {
+    } else if (!strcmp(optionParse->format, "NV12")) {
         yuvUtilsCtx->format = FORMAT_NV12;
     } else {
-        cout << "Parameter Error : -format  [ I420 | yuv420p ]" << endl;
+        cout << "Parameter Error : -format  [ I420 | NV12 ]" << endl;
         return ERR_INVALID_PARAMS;
     }
     yuvUtilsCtx->size = optionParse->width * optionParse->height;
     yuvUtilsCtx->height = optionParse->height;
     yuvUtilsCtx->width = optionParse->width;
+    if (0 == optionParse->fps) {
+        yuvUtilsCtx->fps = 30;
+    } else {
+        yuvUtilsCtx->fps = optionParse->fps;
+    }
     return ERR_NONE;
 }

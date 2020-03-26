@@ -5,9 +5,9 @@
 #include <cstdio>
 #include "../comm/comm.h"
 
-#define I420_FRAME_SIZE            1.5
-#define I420_UV_FRAME_SCALE        4
-#define I420_UV_FRAME_SIZE_SCALE   2
+#define YUV420_FRAME_SIZE            1.5
+#define YUV420_UV_FRAME_SCALE        4
+#define YUV420_UV_FRAME_SIZE_SCALE   2
 
 class yuvTools {
 public:

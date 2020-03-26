@@ -40,6 +40,7 @@ int main(int argc, char *argv[]) {
         fclose(yuvUtilsCtx.inputPtr);
     if (yuvUtilsCtx.outputPtr != nullptr)
         fclose(yuvUtilsCtx.outputPtr);
+
     return 0;
 
     fail:
