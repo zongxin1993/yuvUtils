@@ -14,6 +14,7 @@ void streamUtils_opt::print_usage(char *string) {
     cout << "    -h      <int>       Input stream height." << endl;
     cout << "    -m      <str>       Function mode [ player | split | bright | gray ]." << endl;
     cout << "    -bright <float>     Output file bright." << endl;
+    cout << "    -f      <int>       YUV file fps. Default 30." << endl;
 }
 
 int streamUtils_opt::parse_options(int argc, char *argv[], OptionParse *optionParse) {
