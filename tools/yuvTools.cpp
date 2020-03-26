@@ -3,21 +3,15 @@
 #include <cstdio>
 #include <cstring>
 
-Exception yuvTools::yuvTools_yuv_split(OptionParseCtx pCtx) {
-    int size = pCtx.size;
+ERR yuvTools::yuvTools_yuv_split(YuvUtilsCtx yuvUtilsCtx) {
+    int size = yuvUtilsCtx.size;
     float frame_size = 0;
     int uv = 0;
-    if (!strcmp(pCtx.format, "yuv420p")) {
-        frame_size = YUV420P_FRAME_SIZE;
-        uv = YUV420P_UV_FRAME_SCALE;
-    } else if (!strcmp(pCtx.format, "yuv422p")) {
-        frame_size = YUV422P_FRAME_SIZE;
-        uv = YUV422P_UV_FRAME_SCALE;
-    } else if (!strcmp(pCtx.format, "yuv444p")) {
-        frame_size = YUV444P_FRAME_SIZE;
-        uv = YUV444P_UV_FRAME_SCALE;
+    if (FORMAT_I420 == yuvUtilsCtx.format) {
+        frame_size = I420_FRAME_SIZE;
+        uv = I420_UV_FRAME_SCALE;
     } else {
-        return PARAMETER_ERROR;
+        return ERR_INVALID_PARAMS;
     }
     char *pic = (char *) malloc(size * frame_size);
     remove("output_y.yuv");
@@ -28,12 +22,12 @@ Exception yuvTools::yuvTools_yuv_split(OptionParseCtx pCtx) {
     FILE *fpv = fopen("output_v.yuv", "wb+");
     if (fpy == nullptr || fpu == nullptr || fpv == nullptr) {
         free(pic);
-        return NULL_POINTER;
+        return ERR_NULL_PTR;
     }
-    int frame = commTools::GetFileSize(pCtx.inputStream) / frame_size / size;
+    int frame = commTools::GetFileSize(yuvUtilsCtx.inputPtr) / frame_size / size;
 
     for (int i = 0; i < frame; i++) {
-        fread(pic, sizeof(char), size * frame_size, pCtx.inputStream);
+        fread(pic, sizeof(char), size * frame_size, yuvUtilsCtx.inputPtr);
         //Y
         fwrite(pic, sizeof(char), size, fpy);
         //U
@@ -47,35 +41,29 @@ Exception yuvTools::yuvTools_yuv_split(OptionParseCtx pCtx) {
     fclose(fpu);
     fclose(fpv);
 
-    return NONE;
+    return ERR_NONE;
 }
 
-Exception yuvTools::yuvTools_yuv_gray(OptionParseCtx pCtx) {
-    unsigned int size = pCtx.size;
+ERR yuvTools::yuvTools_yuv_gray(YuvUtilsCtx yuvUtilsCtx) {
+    unsigned int size = yuvUtilsCtx.size;
     float frame_size = 0;
     float uv = 0;
-    if (!strcmp(pCtx.format, "yuv420p")) {
-        frame_size = YUV420P_FRAME_SIZE;
-        uv = YUV420P_UV_FRAME_SIZE_SCALE;
-    } else if (!strcmp(pCtx.format, "yuv422p")) {
-        frame_size = YUV422P_FRAME_SIZE;
-        uv = YUV422P_UV_FRAME_SIZE_SCALE;
-    } else if (!strcmp(pCtx.format, "yuv444p")) {
-        frame_size = YUV444P_FRAME_SIZE;
-        uv = YUV444P_UV_FRAME_SIZE_SCALE;
+    if (FORMAT_I420 == yuvUtilsCtx.format) {
+        frame_size = I420_FRAME_SIZE;
+        uv = I420_UV_FRAME_SIZE_SCALE;
     } else {
-        return PARAMETER_ERROR;
+        return ERR_INVALID_PARAMS;
     }
     char *pic = (char *) malloc(size * frame_size);
     remove("output_gray.yuv");
     FILE *fpgray = fopen("output_gray.yuv", "wb+");
     if (fpgray == nullptr) {
         free(pic);
-        return NULL_POINTER;
+        return ERR_NULL_PTR;
     }
-    int frame = commTools::GetFileSize(pCtx.inputStream) / frame_size / size;
+    int frame = commTools::GetFileSize(yuvUtilsCtx.inputPtr) / frame_size / size;
     for (int i = 0; i < frame; i++) {
-        fread(pic, sizeof(char), size * frame_size, pCtx.inputStream);
+        fread(pic, sizeof(char), size * frame_size, yuvUtilsCtx.inputPtr);
         //Gray
         memset(pic + size, 128, size / uv);
         fwrite(pic, sizeof(char), size * frame_size, fpgray);
@@ -83,43 +71,39 @@ Exception yuvTools::yuvTools_yuv_gray(OptionParseCtx pCtx) {
     free(pic);
     fclose(fpgray);
 
-    return NONE;
+    return ERR_NONE;
 }
 
-Exception yuvTools::yuvTools_yuv_bright(OptionParseCtx pCtx) {
-    unsigned int size = pCtx.size;
+ERR yuvTools::yuvTools_yuv_bright(YuvUtilsCtx yuvUtilsCtx) {
+    unsigned int size = yuvUtilsCtx.size;
     float frame_size = 0;
-    if (!strcmp(pCtx.format, "yuv420p")) {
-        frame_size = YUV420P_FRAME_SIZE;
-    } else if (!strcmp(pCtx.format, "yuv422p")) {
-        frame_size = YUV422P_FRAME_SIZE;
-    } else if (!strcmp(pCtx.format, "yuv444p")) {
-        frame_size = YUV444P_FRAME_SIZE;
+    if (FORMAT_I420 == yuvUtilsCtx.format) {
+        frame_size = I420_FRAME_SIZE;
     } else {
-        return PARAMETER_ERROR;
+        return ERR_INVALID_PARAMS;
     }
     char *pic = (char *) malloc(size * frame_size);
     remove("output_bright.yuv");
     FILE *fpbright = fopen("output_bright.yuv", "wb+");
     if (fpbright == nullptr) {
         free(pic);
-        return NULL_POINTER;
+        return ERR_NULL_PTR;
     }
-    int frame = commTools::GetFileSize(pCtx.inputStream) / frame_size / size;
+    int frame = commTools::GetFileSize(yuvUtilsCtx.inputPtr) / frame_size / size;
 
     for (int i = 0; i < frame; i++) {
-        fread(pic, 1, pCtx.size * frame_size, pCtx.inputStream);
+        fread(pic, 1, yuvUtilsCtx.size * frame_size, yuvUtilsCtx.inputPtr);
         //Bright
-        for (int j = 0; j < pCtx.size; j++) {
-            unsigned char temp = pic[j] / pCtx.bright;
+        for (int j = 0; j < yuvUtilsCtx.size; j++) {
+            unsigned char temp = pic[j] / yuvUtilsCtx.bright;
             pic[j] = temp;
         }
-        fwrite(pic, 1, pCtx.size * frame_size, fpbright);
+        fwrite(pic, 1, yuvUtilsCtx.size * frame_size, fpbright);
     }
     free(pic);
     fclose(fpbright);
 
-    return NONE;
+    return ERR_NONE;
 }
 
 

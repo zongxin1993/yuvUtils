@@ -5,13 +5,12 @@
 #include <iostream>
 #include <cstring>
 
-typedef enum Exception {
-    NONE,
-    INIT,
-    ERROR,
-    NULL_POINTER,
-    PARAMETER_ERROR,
-} Exception;
+typedef enum ERR {
+    ERR_NONE = 0,
+    ERR_UNKNOWN = -1,
+    ERR_INVALID_PARAMS = -2,
+    ERR_NULL_PTR = -3
+} ERR;
 
 typedef enum Mode {
     PLAY_MODE,
@@ -20,16 +19,31 @@ typedef enum Mode {
     BRIGHT_MODE,
 } Mode;
 
-typedef struct OptionParseCtx {
-    FILE *inputStream;
-    FILE *outputStream;
-    Mode mode;
-    char *format;
-    unsigned int width;
-    unsigned int height;
-    unsigned int size;
+typedef enum Format {
+    FORMAT_I420,
+    FORMAT_NV12,
+} Format;
+
+typedef struct OptionParse {
+    const char *inputStream;
+    const char *outputStream;
+    const char *mode;
+    const char *format;
+    int width;
+    int height;
     double bright;
-} OptionParseCtx;
+} OptionParse;
+
+typedef struct YuvUtilsCtx {
+    FILE *inputPtr;
+    FILE *outputPtr;
+    Format format;
+    Mode mode;
+    int size;
+    int width;
+    int height;
+    double bright;
+} YuvUtilsCtx;
 
 class commTools {
 

@@ -8,7 +8,7 @@
 class streamPlayer {
 
 public:
-    static Exception streamTools_play(OptionParseCtx pCtx);
+    static ERR streamTools_play(YuvUtilsCtx yuvUtilsCtx);
 
 private:
 
