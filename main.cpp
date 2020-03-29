@@ -38,15 +38,11 @@ int main(int argc, char *argv[]) {
     }
     if (yuvUtilsCtx.inputPtr != nullptr)
         fclose(yuvUtilsCtx.inputPtr);
-    if (yuvUtilsCtx.outputPtr != nullptr)
-        fclose(yuvUtilsCtx.outputPtr);
 
     return 0;
 
     fail:
     if (yuvUtilsCtx.inputPtr != nullptr)
         fclose(yuvUtilsCtx.inputPtr);
-    if (yuvUtilsCtx.outputPtr != nullptr)
-        fclose(yuvUtilsCtx.outputPtr);
     return -1;
 }

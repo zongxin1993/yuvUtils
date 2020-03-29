@@ -5,6 +5,25 @@
 #include <iostream>
 #include <cstring>
 
+#define FRAME_SIZE_SQCIF_W  128
+#define FRAME_SIZE_SQCIF_H  96
+#define FRAME_SIZE_QCIF_W   176
+#define FRAME_SIZE_QCIF_H   144
+#define FRAME_SIZE_CIF_W    352
+#define FRAME_SIZE_CIF_H    288
+#define FRAME_SIZE_4CIF_W   704
+#define FRAME_SIZE_4CIF_H   576
+
+#define FRAME_SIZE_SQCIF      "SQCIF"
+#define FRAME_SIZE_QCIF       "QCIF"
+#define FRAME_SIZE_CIF        "CIF"
+#define FRAME_SIZE_4CIF       "4CIF"
+#define FRAME_SIZE_SQCIF_LOW  "sqcif"
+#define FRAME_SIZE_QCIF_LOW   "qcif"
+#define FRAME_SIZE_CIF_LOW    "cif"
+#define FRAME_SIZE_4CIF_LOW   "4cif"
+
+
 typedef enum ERR {
     ERR_NONE = 0,
     ERR_UNKNOWN = -1,
@@ -22,13 +41,13 @@ typedef enum Mode {
 typedef enum Format {
     FORMAT_I420,
     FORMAT_NV12,
+    FORMAT_Y,
 } Format;
 
 typedef struct OptionParse {
-    const char *inputStream;
-    const char *outputStream;
-    const char *mode;
-    const char *format;
+    std::string inputStream;
+    std::string mode;
+    std::string format;
     int width;
     int height;
     int fps;
@@ -36,11 +55,10 @@ typedef struct OptionParse {
 } OptionParse;
 
 typedef struct YuvUtilsCtx {
+    std::string inputFileName;
     FILE *inputPtr;
-    FILE *outputPtr;
     Format format;
     Mode mode;
-    int size;
     int width;
     int height;
     int fps;

@@ -31,6 +31,9 @@ ERR streamPlayer::streamTools_play(YuvUtilsCtx yuvUtilsCtx) {
     } else if (yuvUtilsCtx.format == FORMAT_NV12) {
         frame_size = YUV420_FRAME_SIZE;
         pix_format = SDL_PIXELFORMAT_NV12;
+    } else if (yuvUtilsCtx.format == FORMAT_Y) {
+        frame_size = YUV420_FRAME_SIZE;
+        pix_format = SDL_PIXELFORMAT_IYUV;
     } else {
         return ERR_INVALID_PARAMS;
     }
@@ -42,14 +45,24 @@ ERR streamPlayer::streamTools_play(YuvUtilsCtx yuvUtilsCtx) {
         std::cout << "SDL could not create sdlTexture with error: " << SDL_GetError() << std::endl;
         return ERR_UNKNOWN;
     }
-
-    char *pic = (char *) malloc(yuvUtilsCtx.size * frame_size);
-    int frame = commTools::GetFileSize(yuvUtilsCtx.inputPtr) / frame_size / yuvUtilsCtx.size;
-
+    char *pic = (char *) malloc(yuvUtilsCtx.width * yuvUtilsCtx.height * frame_size);
+    if (nullptr == pic)
+        return ERR_NULL_PTR;
+    int frame;
+    if (yuvUtilsCtx.format == FORMAT_Y) {
+        frame = commTools::GetFileSize(yuvUtilsCtx.inputPtr) / yuvUtilsCtx.width * yuvUtilsCtx.height;
+    } else {
+        frame = commTools::GetFileSize(yuvUtilsCtx.inputPtr) / frame_size / yuvUtilsCtx.width * yuvUtilsCtx.height;
+    }
     SDL_Event Event;
     char title[128];
     for (int i = 0; i < frame; i++) {
-        fread(pic, sizeof(char), yuvUtilsCtx.size * frame_size, yuvUtilsCtx.inputPtr);
+        if (yuvUtilsCtx.format == FORMAT_Y) {
+            fread(pic, sizeof(char), yuvUtilsCtx.width * yuvUtilsCtx.height, yuvUtilsCtx.inputPtr);
+            memset(pic + yuvUtilsCtx.width * yuvUtilsCtx.height, 128, yuvUtilsCtx.width * yuvUtilsCtx.height / 2);
+        } else {
+            fread(pic, sizeof(char), yuvUtilsCtx.width * yuvUtilsCtx.height * frame_size, yuvUtilsCtx.inputPtr);
+        }
         usleep(1000 / yuvUtilsCtx.fps);
         SDL_UpdateTexture(sdlTexture, NULL, pic, yuvUtilsCtx.width);
         SDL_RenderClear(sdlRenderer);
