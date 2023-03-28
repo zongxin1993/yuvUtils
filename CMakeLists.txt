@@ -19,3 +19,8 @@ add_executable(yuvUtils
         main.cpp comm/comm.cpp tools/yuvPlayer.cpp tools/yuvPlayer.h)
 
 target_link_libraries(yuvUtils ${SDL2_LIBRARIES})
+install(
+	TARGETS ${PROJECT_NAME}
+	EXPORT yuvUtils
+	DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
